@@ -1,0 +1,24 @@
+{
+  "name": "kova-landing-page",
+  "version": "1.0.0",
+  "description": "Kova Landing Page in React",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "images": "node scripts/optimize-images.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^1.76.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "simple-icons": "16.37.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "playwright-core": "^1.57.0",
+    "sharp": "^0.35.5",
+    "vite": "^8.3.8"
+  }
+}

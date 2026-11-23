@@ -1,0 +1,11 @@
+node_modules/
+dist/
+qa-shots/
+qa/shots/
+.bak/
+backup-*/
+src-backup/
+nul
+*.log
+.DS_Store
+Thumbs.db

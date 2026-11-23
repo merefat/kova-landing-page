@@ -1,0 +1,187 @@
+/* ==========================================================================
+   CARD 06 — Energy, Climate & Sensors
+   ========================================================================== */
+
+.climate-card .fc-text {
+  width: 300px;
+}
+.climate-widget {
+  gap: 14px;
+}
+
+/* Thermostat panel */
+.thermo {
+  width: 132px;
+  flex-shrink: 0;
+  padding: 13px 10px;
+  text-align: center;
+}
+.thermo-flake {
+  color: var(--cyan);
+  margin-bottom: 5px;
+}
+.thermo-temp {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.thermo-set {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin: 3px 0 11px;
+}
+.thermo-btns {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.thermo-btns button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.thermo-btns button:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Energy dashboard panel */
+.energy {
+  position: relative;
+  flex: 1;
+  max-width: 440px;
+  padding: 13px 15px;
+}
+.energy-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 8px;
+}
+.energy-leaf {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: var(--green);
+  background: rgba(38, 201, 148, 0.14);
+  border: 1px solid rgba(38, 201, 148, 0.4);
+}
+.energy-kwh {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.energy-delta {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--green);
+}
+.energy-graph {
+  position: relative;
+  height: 84px;
+  margin: 2px 0 8px;
+}
+.energy-graph svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.energy-line {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.energy-area {
+  fill: rgba(38, 201, 148, 0.13);
+}
+.energy-hot {
+  position: absolute;
+  width: 14%;
+  height: 30%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  z-index: 1;
+}
+.energy-tip {
+  position: absolute;
+  transform: translate(-50%, -140%);
+  background: #101826;
+  border: 1px solid rgba(38, 201, 148, 0.45);
+  color: var(--green);
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 7px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+.energy-chips {
+  display: flex;
+  gap: 8px;
+}
+.energy-chip {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stroke-soft);
+  border-radius: 9px;
+  padding: 7px 8px;
+}
+.energy-chip strong {
+  color: #fff;
+}
+.energy-chip.aq {
+  cursor: pointer;
+}
+.energy-chip.aq.good strong {
+  color: var(--green);
+}
+.energy-chip.aq.fair strong {
+  color: var(--amber);
+}
+.energy-chip.aq.poor strong {
+  color: var(--red);
+}
+.energy-badge {
+  margin-top: 8px;
+}
+
+@media (max-width: 1099px) {
+  .climate-card .fc-text {
+    width: 100%;
+    max-width: 440px;
+  }
+  .climate-widget {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .energy {
+    max-width: none;
+    flex-basis: 380px;
+  }
+}
+@media (max-width: 480px) {
+  .energy {
+    flex-basis: 100%;
+  }
+}

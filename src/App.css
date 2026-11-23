@@ -1,0 +1,27 @@
+/* ==========================================================================
+   KOVA LANDING PAGE — stylesheet entry
+   Midnight canvas (#080B12), controlled gold (#F4B942), cinematic sections.
+   ========================================================================== */
+
+@import './styles/tokens.css';
+@import './styles/global.css';
+@import './styles/header.css';
+@import './styles/footer.css';
+@import './styles/home.css';
+@import './styles/home-sections.css';
+@import './styles/fp-hero.css';
+@import './styles/features.css';
+@import './styles/fc-presence.css';
+@import './styles/fc-devices.css';
+@import './styles/fc-modes.css';
+@import './styles/fc-security.css';
+@import './styles/fc-family.css';
+@import './styles/fc-climate.css';
+@import './styles/fcta.css';
+@import './styles/how.css';
+@import './styles/modals.css';
+@import './styles/ni-base.css';
+@import './styles/ni-hero.css';
+@import './styles/ni-workspace.css';
+@import './styles/ni-guide.css';
+@import './styles/ni-page.css';

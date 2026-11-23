@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kova — Mistake Analysis & Fix Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050918;
+      --surface: #0b1230;
+      --surface-2: #101838;
+      --border: #1e2a52;
+      --text: #f7f8ff;
+      --muted: #c6cad8;
+      --dim: #8b93ad;
+      --gold: #ffb51f;
+      --amber: #ffc54a;
+      --blue: #347eff;
+      --cyan: #40c7ff;
+      --purple: #8069de;
+      --green: #00d69a;
+      --rose: #f43f5e;
+      --radius: 14px;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      line-height: 1.6;
+      background:
+        radial-gradient(ellipse 48% 32% at 85% 15%, rgba(40, 74, 165, 0.20), transparent 75%),
+        radial-gradient(ellipse 45% 30% at 90% 70%, rgba(92, 67, 168, 0.12), transparent 75%),
+        radial-gradient(ellipse 40% 25% at 10% 90%, rgba(31, 68, 149, 0.16), transparent 75%),
+        linear-gradient(180deg, #050918 0%, #080f24 55%, #050918 100%);
+      background-attachment: fixed;
+    }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 24px 96px; }
+
+    header.page-head { margin-bottom: 40px; }
+    .eyebrow {
+      display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gold);
+      border: 1px solid rgba(255, 181, 31, 0.35); border-radius: 999px;
+      padding: 6px 14px; margin-bottom: 18px;
+      background: rgba(255, 181, 31, 0.06);
+    }
+    h1 { font-size: 38px; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.02em; }
+    h1 span { color: var(--gold); }
+    .lede { color: var(--muted); font-size: 17px; max-width: 760px; margin: 0 0 20px; }
+    .status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--amber);
+      background: rgba(255, 197, 74, 0.08); border: 1px solid rgba(255, 197, 74, 0.3);
+      padding: 8px 14px; border-radius: 10px;
+    }
+    .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+
+    .verdict {
+      margin: 28px 0 0; padding: 20px 22px; border-radius: var(--radius);
+      background: linear-gradient(120deg, rgba(52, 126, 255, 0.10), rgba(128, 105, 222, 0.08));
+      border: 1px solid var(--border); color: var(--muted);
+    }
+    .verdict strong { color: var(--text); }
+
+    section {
+      margin-top: 44px; padding: 28px 30px;
+      background: rgba(11, 18, 48, 0.55); border: 1px solid var(--border);
+      border-radius: var(--radius); backdrop-filter: blur(6px);
+    }
+    section h2 {
+      font-size: 22px; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .num {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--gold);
+      background: rgba(255, 181, 31, 0.10); border: 1px solid rgba(255, 181, 31, 0.3);
+      padding: 3px 10px; border-radius: 8px;
+    }
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+    .tag.crit { color: #ff9aa8; background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); }
+    .tag.high { color: var(--amber); background: rgba(255, 197, 74, 0.10); border: 1px solid rgba(255, 197, 74, 0.3); }
+    .tag.ok   { color: var(--green); background: rgba(0, 214, 154, 0.10); border: 1px solid rgba(0, 214, 154, 0.3); }
+
+    h3 { font-size: 16px; font-weight: 700; margin: 24px 0 8px; color: var(--text); }
+    p { color: var(--muted); margin: 10px 0; }
+    p strong, li strong { color: var(--text); }
+    ul, ol { color: var(--muted); padding-left: 22px; margin: 10px 0; }
+    li { margin: 5px 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th {
+      text-align: left; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--dim); padding: 10px 12px; border-bottom: 1px solid var(--border);
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(30, 42, 82, 0.5); color: var(--muted); vertical-align: top; }
+    td:first-child { color: var(--text); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+
+    pre {
+      background: #060b1e; border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px 18px; overflow-x: auto; margin: 14px 0;
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.65; color: #d5dbef;
+    }
+    code { font-family: var(--font-mono); font-size: 0.9em; color: var(--cyan); }
+    pre code { color: inherit; }
+    .ascii { color: var(--dim); }
+
+    .swatches { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+    .swatch {
+      flex: 1 1 150px; border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; background: var(--surface-2);
+    }
+    .swatch .chip { height: 56px; }
+    .swatch .meta { padding: 10px 12px; font-size: 12px; }
+    .swatch .meta b { display: block; font-family: var(--font-mono); color: var(--text); }
+    .swatch .meta span { color: var(--dim); }
+
+    .img-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 16px 0; }
+    .img-grid figure { margin: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+    .img-grid img { display: block; width: 100%; height: 140px; object-fit: cover; }
+    .img-grid figcaption { padding: 10px 12px; font-size: 12px; color: var(--muted); }
+    .img-grid figcaption code { display: block; margin-top: 2px; }
+
+    .callout {
+      margin: 16px 0; padding: 14px 18px; border-radius: 10px; font-size: 14px;
+      border: 1px solid rgba(255, 181, 31, 0.3); background: rgba(255, 181, 31, 0.06); color: var(--muted);
+    }
+    .callout.blue { border-color: rgba(52, 126, 255, 0.35); background: rgba(52, 126, 255, 0.07); }
+    .callout strong { color: var(--text); }
+
+    .checklist { list-style: none; padding-left: 0; }
+    .checklist li { padding: 6px 0 6px 30px; position: relative; }
+    .checklist li::before {
+      content: ""; position: absolute; left: 0; top: 9px;
+      width: 16px; height: 16px; border-radius: 5px;
+      border: 1.5px solid var(--dim); background: rgba(255,255,255,0.02);
+    }
+
+    blockquote.agent {
+      margin: 18px 0; padding: 22px 26px; border-radius: 12px;
+      border: 1px solid rgba(255, 181, 31, 0.4); border-left: 4px solid var(--gold);
+      background: rgba(255, 181, 31, 0.05); color: var(--muted); font-size: 14.5px;
+    }
+    blockquote.agent p { margin: 12px 0; }
+    blockquote.agent p:first-child { margin-top: 0; }
+    blockquote.agent p:last-child { margin-bottom: 0; }
+
+    .final {
+      margin-top: 44px; padding: 26px 30px; border-radius: var(--radius);
+      background: linear-gradient(120deg, rgba(255, 181, 31, 0.10), rgba(52, 126, 255, 0.08));
+      border: 1px solid rgba(255, 181, 31, 0.35);
+    }
+    .final h2 { margin-top: 0; color: var(--gold); font-size: 20px; }
+    .final p { margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 32px 16px 64px; }
+      h1 { font-size: 28px; }
+      section { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="page-head">
+      <span class="eyebrow">Kova Landing Page</span>
+      <h1>Mistake Analysis <span>&amp;</span> Fix Plan</h1>
+      <p class="lede">Screenshot review of the current home page. The biggest problem is not the feature design itself — it is the way the page has been <strong>sized, positioned</strong>, and how its <strong>background layers</strong> have been applied.</p>
+      <span class="status">Analysis complete — awaiting additional reference images before fixes begin</span>
+
+      <div class="verdict">
+        The result contains most of the correct Kova sections, but the overall composition looks like a <strong>small website placed in the middle of a much larger empty screen</strong>. The background does not flow consistently, the text and interfaces are too small, and the photographs are excessively dark.
+        <br><br>
+        <strong>Recommendation:</strong> Do not rebuild the whole design from scratch. Correct the page structure, global background, sizing, image treatment and individual feature layouts.
+      </div>
+    </header>
+
+    <!-- ══════════ REFERENCE IMAGES ══════════ -->
+    <section>
+      <h2>Reference Images <span class="tag ok">Saved in image/</span></h2>
+      <p>All pasted reference images are stored in the project <code>image/</code> folder:</p>
+      <div class="img-grid">
+        <figure>
+          <img src="image/bg-gradient.png" alt="Target background gradient">
+          <figcaption><b>Background target</b> — continuous dark navy, blue/purple glows<code>image/bg-gradient.png</code></figcaption>
+        </figure>
+        <figure>
+          <img src="image/nav-reference.png" alt="Navigation bar reference">
+          <figcaption><b>Nav reference</b> — pill-style bar, gold accent<code>image/nav-reference.png</code></figcaption>
+        </figure>
+        <figure>
+          <img src="image/hero-house.jpg" alt="Hero house photograph">
+          <figcaption><b>Hero photo</b> — modern house at dusk<code>image/hero-house.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="image/speaker.png" alt="Smart speaker photograph">
+          <figcaption><b>Device control</b> — smart speaker in living room<code>image/speaker.png</code></figcaption>
+        </figure>
+        <figure>
+          <img src="image/living-room.png" alt="Living room photograph">
+          <figcaption><b>Modes photo</b> — dark living room, amber lighting<code>image/living-room.png</code></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ 1. DIAGNOSIS ══════════ -->
+    <section>
+      <h2><span class="num">01</span> Overall Diagnosis — What Went Wrong <span class="tag crit">Critical</span></h2>
+      <ul>
+        <li><strong>Major layout problem</strong></li>
+        <li><strong>Background problem</strong></li>
+        <li><strong>Content scaling problem</strong></li>
+      </ul>
+      <p>The screenshot has six major problems:</p>
+      <table>
+        <tr><th>Problem</th><th>What I see in the screenshot</th><th>What should happen</th></tr>
+        <tr><td>Content width</td><td>Main content is only around 700 px wide</td><td>Expand to approximately 1200–1280 px</td></tr>
+        <tr><td>Background</td><td>Large empty navy areas and horizontal colour bands</td><td>One continuous dark background</td></tr>
+        <tr><td>Hero</td><td>Photograph and text have an abrupt separation</td><td>Photograph should blend naturally into the background</td></tr>
+        <tr><td>Typography</td><td>Feature text is too small</td><td>Increase headings and paragraph sizes</td></tr>
+        <tr><td>Feature images</td><td>Images are very dark and interfaces are tiny</td><td>Brighter images and larger interface components</td></tr>
+        <tr><td>CTA</td><td>Footer CTA is too short and narrow</td><td>Wider, taller, properly balanced CTA</td></tr>
+      </table>
+
+      <h3>The most important issue: content width</h3>
+      <p>The screenshot is approximately <strong>1308 px</strong> wide. Current approximate measurements:</p>
+      <pre class="ascii"><code>Empty left area   |   Content    |   Empty right area
+     305px        |   700px      |        305px</code></pre>
+      <p><em>Approximate visual measurements, not inspected CSS values.</em></p>
+      <p>The main content occupies only about <strong>54%</strong> of the available screen width. In the desired design, cards extend almost from the left edge to the right edge, leaving only a small margin.</p>
+
+      <h3>Why this happened</h3>
+      <p>Most likely a narrow wrapper or an insufficient maximum width, e.g.:</p>
+      <pre><code>.container {
+  max-width: 700px;
+  margin: auto;
+}</code></pre>
+      <p>Another possibility is a parent element with a percentage width or a scaling rule. The screenshot cannot identify the exact CSS responsible — inspect the actual container width, parent styles, grid, and any <code>transform: scale()</code> or <code>zoom</code> rules.</p>
+
+      <h3>How to fix it</h3>
+      <p>Use a shared container for the header, hero content and features:</p>
+      <pre><code>.container {
+  width: min(1280px, calc(100% - 40px));
+  margin-inline: auto;
+}</code></pre>
+      <p>At the current screenshot width, this gives approximately <strong>1268 px</strong> of content rather than 700 px. This one correction will make the entire page look substantially more like the intended design.</p>
+    </section>
+
+    <!-- ══════════ 2. BACKGROUND ══════════ -->
+    <section>
+      <h2><span class="num">02</span> Background Colour — Most Important Visual Correction <span class="tag crit">Needs redesign</span></h2>
+      <p>The original Kova reference had a <strong>continuous dark navy background</strong> with small blue and purple lighting effects. The current page has a different appearance — three noticeable problems:</p>
+
+      <h3>Problem A — Large empty dark area on the left</h3>
+      <p>The left side is mostly flat navy. Feature cards are concentrated in the middle, so the empty area becomes visually dominant. Primarily a layout-width issue, but the background also needs more depth.</p>
+
+      <h3>Problem B — Horizontal colour transitions</h3>
+      <ul>
+        <li>The top section is almost black navy.</li>
+        <li>Around the first feature card and below, the background shifts to a stronger blue.</li>
+        <li>The lower area becomes increasingly purple.</li>
+        <li>The footer has another different blue tone.</li>
+      </ul>
+      <p>These areas look like independent section backgrounds rather than one continuous page.</p>
+
+      <h3>Problem C — Purple is too dominant</h3>
+      <p>The large purple-blue area on the right side competes with the content. Purple should support the premium appearance, not become a large rectangular background that dominates the design.</p>
+
+      <h3>The correct background colour structure</h3>
+      <p>Use one global background across the complete page. Secondary colours appear as soft gradients, not solid blocks:</p>
+      <div class="swatches">
+        <div class="swatch"><div class="chip" style="background:#050918"></div><div class="meta"><b>#050918</b><span>Primary — page foundation</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#0B1230"></div><div class="meta"><b>#0B1230</b><span>Secondary navy</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#17275B"></div><div class="meta"><b>#17275B</b><span>Blue depth</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#40316D"></div><div class="meta"><b>#40316D</b><span>Purple glow</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#442C20"></div><div class="meta"><b>#442C20</b><span>Warm gold glow</span></div></div>
+      </div>
+
+      <h3>How the background should look</h3>
+      <ul>
+        <li><strong>Main canvas:</strong> midnight navy.</li>
+        <li><strong>Upper right:</strong> subtle electric-blue glow.</li>
+        <li><strong>Middle right:</strong> very soft indigo glow.</li>
+        <li><strong>Lower section:</strong> subtle purple glow.</li>
+        <li><strong>Bottom:</strong> a restrained gold and blue light effect.</li>
+      </ul>
+      <p>The colour should transition naturally from one area to another.</p>
+
+      <h3>Recommended global CSS</h3>
+      <pre><code>:root {
+  --bg-primary: #050918;
+  --bg-secondary: #0B1230;
+  --bg-blue: #17275B;
+
+  --text-primary: #F7F8FF;
+  --text-secondary: #C6CAD8;
+
+  --gold: #FFB51F;
+  --amber: #FFC54A;
+  --electric-blue: #347EFF;
+  --cyan: #40C7FF;
+  --purple: #8069DE;
+  --green: #00D69A;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: #050918;
+  color: var(--text-primary);
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      ellipse 48% 32% at 85% 15%,
+      rgba(40, 74, 165, 0.20),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 45% 30% at 90% 70%,
+      rgba(92, 67, 168, 0.12),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 40% 25% at 10% 90%,
+      rgba(31, 68, 149, 0.16),
+      transparent 75%
+    ),
+    linear-gradient(
+      180deg,
+      #050918 0%,
+      #080F24 55%,
+      #050918 100%
+    );
+}
+
+main,
+section {
+  background-color: transparent;
+}</code></pre>
+      <p>This creates depth without creating separate horizontal colour blocks.</p>
+      <div class="callout"><strong>Important:</strong> Do not apply a different solid background to each section. The background should belong to the overall page, while the cards should have their own photographs and overlays.</div>
+    </section>
+
+    <!-- ══════════ 3. HEADER ══════════ -->
+    <section>
+      <h2><span class="num">03</span> Header and Navigation — Alignment Problem <span class="tag high">Needs improvement</span></h2>
+      <h3>What is wrong?</h3>
+      <ul>
+        <li>The Kova logo sits far to the left of the navigation.</li>
+        <li>The navigation begins over the house photograph.</li>
+        <li>The Get Started button is very small.</li>
+        <li>The header appears compressed.</li>
+        <li>Logo, navigation and CTA do not feel like one connected design.</li>
+      </ul>
+      <p>The header should use the same main container as the rest of the page.</p>
+
+      <h3>What should change?</h3>
+      <p>Use one horizontal layout:</p>
+      <pre class="ascii"><code>Kova   |   Home  Features  Explore  Why Kova  Resources   |   Get Started →</code></pre>
+      <table>
+        <tr><th>Element</th><th>Desktop size</th></tr>
+        <tr><td>Header height</td><td>72–84 px</td></tr>
+        <tr><td>Logo</td><td>100–115 px wide</td></tr>
+        <tr><td>Navigation</td><td>420–480 px wide</td></tr>
+        <tr><td>CTA height</td><td>42–48 px</td></tr>
+        <tr><td>Container</td><td>1280 px maximum</td></tr>
+      </table>
+      <p>The navigation should have a transparent dark background and subtle white border. Keep the active page highlighted using a soft navy-gold effect.</p>
+    </section>
+
+    <!-- ══════════ 4. HERO ══════════ -->
+    <section>
+      <h2><span class="num">04</span> Hero Section — Photograph and Text Are Disconnected <span class="tag high">Needs improvement</span></h2>
+      <h3>What I see</h3>
+      <p>The hero photograph occupies the right side, while the left side is almost completely empty except for the text. The problem is not using a split hero — a split hero is appropriate for Kova. The problem is the <strong>abrupt transition</strong> between the dark text area and the photograph. There is a visible vertical edge where the house image begins, making the photograph look like a separate rectangle pasted onto a dark background.</p>
+
+      <h3>How to fix it</h3>
+      <p>Use the house photograph as a <strong>full-bleed hero background</strong>. Keep the building positioned on the right. Create a dark gradient that fades gradually towards the left. The text remains in a separate content container above the image.</p>
+      <pre><code>.hero {
+  position: relative;
+  min-height: 410px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background:
+    linear-gradient(
+      90deg,
+      #050918 0%,
+      rgba(5, 9, 24, 0.96) 25%,
+      rgba(5, 9, 24, 0.68) 44%,
+      rgba(5, 9, 24, 0.18) 70%,
+      rgba(5, 9, 24, 0.05) 100%
+    ),
+    url("/assets/kova/hero-smart-home.webp");
+
+  background-size: cover;
+  background-position: center right;
+}</code></pre>
+
+      <h3>Typography problem</h3>
+      <p>The current headline is too small relative to the available space. Use:</p>
+      <ul>
+        <li><strong>Take Control.</strong> — white.</li>
+        <li><strong>Live Smarter.</strong> — gold.</li>
+      </ul>
+      <table>
+        <tr><th>Element</th><th>Current appearance</th><th>Target</th></tr>
+        <tr><td>Main heading</td><td>Compressed</td><td>56–62 px</td></tr>
+        <tr><td>Supporting text</td><td>Very small</td><td>15–16 px</td></tr>
+        <tr><td>Small badge</td><td>Tiny</td><td>12–13 px</td></tr>
+        <tr><td>Video button</td><td>Tiny</td><td>44–50 px height</td></tr>
+      </table>
+      <p>Keep the hero text approximately <strong>430–470 px</strong> wide. The house photograph should be large enough to show the full architecture, not just a small cropped area.</p>
+    </section>
+
+    <!-- ══════════ 5. SECTION 01 ══════════ -->
+    <section>
+      <h2><span class="num">05</span> Section 01 — Smart Presence &amp; Automations <span class="tag high">Good concept, poor presentation</span></h2>
+      <p>One of the most important sections — it demonstrates what makes Kova useful.</p>
+      <h3>What is wrong?</h3>
+      <p>All the right ideas are present — a person entering the home, an inactive phone screen, a Live Demo panel, a Simulate Person Entering button. However, the entire interface is <strong>too small</strong>. The visitor cannot easily understand the sequence of events. The phone display also needs to look more like a smartphone, rather than a small floating rectangular screen.</p>
+
+      <h3>Correct layout</h3>
+      <p>Use a <strong>full-width card approximately 230–250 px high</strong> on desktop, divided into three visual areas:</p>
+      <table>
+        <tr><th>Area</th><th>Width</th><th>Content</th></tr>
+        <tr><td>Left</td><td>25–30%</td><td>Heading, description and button</td></tr>
+        <tr><td>Centre</td><td>40–45%</td><td>Person entering the room</td></tr>
+        <tr><td>Right</td><td>25–30%</td><td>Phone and Live Demo interface</td></tr>
+      </table>
+
+      <div class="callout blue">
+        <strong>Important implementation change</strong> — the first state should show:
+        <ul style="margin:8px 0 0">
+          <li>Waiting for activity.</li>
+          <li>No notification.</li>
+          <li>Lights off.</li>
+          <li>No motion detected.</li>
+        </ul>
+      </div>
+      <p>When the visitor clicks <strong>Simulate Person Entering</strong>:</p>
+      <ol>
+        <li>The person enters the motion-detection zone.</li>
+        <li>The motion border glows.</li>
+        <li>The motion status changes.</li>
+        <li>The phone displays "Welcome Home!"</li>
+        <li>The simulated lights turn on.</li>
+        <li>The Live Demo checklist updates.</li>
+      </ol>
+      <p>Show the phone inside a recognizable portrait-shaped smartphone frame. Do not make the phone UI too small.</p>
+    </section>
+
+    <!-- ══════════ 6. SECTION 02 ══════════ -->
+    <section>
+      <h2><span class="num">06</span> Section 02 — Control Your Devices Instantly <span class="tag high">Interface too small</span></h2>
+      <h3>Current problem</h3>
+      <p>The volume controller is positioned on the right, but the image and control panel are squeezed into a narrow card. The slider, percentage and controls are difficult to read.</p>
+
+      <h3>How to fix it</h3>
+      <p>This is a <strong>half-width card</strong> in the two-column grid. At a 1280 px container width, each half-width card has approximately <strong>630 px</strong> available, depending on the grid gap.</p>
+      <ul>
+        <li><strong>Left 40%</strong> for text.</li>
+        <li><strong>Right 60%</strong> for the speaker and control UI.</li>
+      </ul>
+      <p>Make the speaker image prominent. Place the volume controller in a glass panel showing:</p>
+      <pre class="ascii"><code>VOLUME — 70%
+- Blue speaker icon.
+- Large 70% label.
+- Horizontal slider.
+- Minus button.
+- Plus button.
+- Animated sound-wave visual.</code></pre>
+      <p>The slider must be a <strong>real input</strong>, not a drawing. When the slider changes, update the percentage and animate the sound-wave display.</p>
+    </section>
+
+    <!-- ══════════ 7. SECTION 03 ══════════ -->
+    <section>
+      <h2><span class="num">07</span> Section 03 — Switch Modes Effortlessly <span class="tag high">Weak visual demo</span></h2>
+      <p>The screenshot shows Day, Evening and Night controls, which is correct. But the actual home-scene change is not sufficiently communicated.</p>
+      <h3>What to fix</h3>
+      <p>Use the photograph as the card background. Display the three mode controls as large, clear buttons on the right. When a mode is selected:</p>
+      <ul>
+        <li><strong>Day:</strong> bright, natural environment.</li>
+        <li><strong>Evening:</strong> warm amber and gold lighting.</li>
+        <li><strong>Night:</strong> darker blue and purple lighting.</li>
+      </ul>
+      <p>The <strong>entire room scene</strong> should respond to the selection. A small gold border around the selected button is not enough — the background light treatment should visibly change too. For best results, use three optimized photographs or a consistent photograph with carefully controlled lighting overlays.</p>
+    </section>
+
+    <!-- ══════════ 8. SECTION 04 ══════════ -->
+    <section>
+      <h2><span class="num">08</span> Section 04 — Enhanced Security &amp; Peace of Mind <span class="tag high">Interface too compact</span></h2>
+      <h3>What is wrong?</h3>
+      <p>The camera interface is difficult to distinguish from the background. The camera preview, notification and detection controls are too small — particularly important because the image should communicate that Kova can monitor the home and alert the homeowner.</p>
+      <h3>How to fix it</h3>
+      <ul>
+        <li><strong>Left 40%:</strong> text and CTA.</li>
+        <li><strong>Right 60%:</strong> camera-preview panel.</li>
+        <li>Visible <strong>Live</strong> indicator.</li>
+        <li>Clear person-detection outline.</li>
+        <li>Large alert notification.</li>
+      </ul>
+      <p>Initial state: <strong>No activity detected</strong>.</p>
+      <p>When the visitor selects <strong>Simulate Door Activity</strong>:</p>
+      <ul>
+        <li>Change status to <em>Person detected</em>.</li>
+        <li>Show a red detection outline.</li>
+        <li>Trigger a security notification.</li>
+        <li>Highlight the Live indicator.</li>
+      </ul>
+      <p>Keep this interface visibly separate from the photograph using a glass panel.</p>
+    </section>
+
+    <!-- ══════════ 9. SECTION 05 ══════════ -->
+    <section>
+      <h2><span class="num">09</span> Section 05 — Family &amp; Access <span class="tag high">Poor balance</span></h2>
+      <p>The current family profile section has a very dark background and the three profile images are too small. The member selector should be the primary visual element.</p>
+      <h3>How to fix it</h3>
+      <p>Increase the profile area. Use <strong>circular avatars around 60–70 px</strong> on desktop, with:</p>
+      <ul>
+        <li>Blue outline for ordinary profiles.</li>
+        <li>Gold or cyan outline for the active profile.</li>
+        <li>A small name label beneath each picture.</li>
+      </ul>
+      <p>The <strong>Add Member</strong> button should be visually separate from the existing profiles. When someone selects a profile, display the permissions panel:</p>
+      <ul>
+        <li><strong>You</strong> — Owner</li>
+        <li><strong>Maya</strong> — Member</li>
+        <li><strong>Leo</strong> — Guest</li>
+      </ul>
+      <p>Use a readable glass background panel rather than a heavily darkened photograph.</p>
+    </section>
+
+    <!-- ══════════ 10. SECTION 06 ══════════ -->
+    <section>
+      <h2><span class="num">10</span> Section 06 — Energy, Climate &amp; Sensors <span class="tag high">Dashboard too small</span></h2>
+      <p>Content exists and was correctly restored, but it needs substantially more visual space.</p>
+      <h3>Current problem</h3>
+      <p>The energy graph and thermostat are compressed into the right side. The visual content should represent monitoring and control — at the moment the graph looks more like a tiny decoration than a dashboard.</p>
+      <h3>How to fix it</h3>
+      <p>Use a <strong>full-width card with approximately 230 px height</strong>, divided into three areas:</p>
+      <table>
+        <tr><th>Area</th><th>Width</th></tr>
+        <tr><td>Text</td><td>30%</td></tr>
+        <tr><td>Thermostat</td><td>20%</td></tr>
+        <tr><td>Energy dashboard</td><td>50%</td></tr>
+      </table>
+      <p>The energy dashboard should prominently show:</p>
+      <pre class="ascii"><code>ENERGY USAGE
+2.4 kWh
+↓ 18% vs yesterday
+
+Indoor        22°C
+Air quality   Good</code></pre>
+      <p>The thermostat should be larger and should actually respond when the visitor changes temperature.</p>
+      <div class="callout"><strong>Do not</strong> display arbitrary sample values as though they are connected to real smart-home sensors. Label them as demo values.</div>
+    </section>
+
+    <!-- ══════════ 11. CTA ══════════ -->
+    <section>
+      <h2><span class="num">11</span> Bottom CTA — Too Narrow and Too Short <span class="tag high">Needs improvement</span></h2>
+      <p>The footer CTA is currently squeezed into the same narrow layout as the feature cards. The logo, heading, description and button have insufficient breathing room.</p>
+      <h3>How to fix it</h3>
+      <p>Use a CTA panel approximately <strong>960–1050 px wide, 110–125 px high</strong>. Inside:</p>
+      <ul>
+        <li><strong>Left:</strong> Gold Kova house logo.</li>
+        <li><strong>Centre:</strong> Heading and description.</li>
+        <li><strong>Right:</strong> Gold <em>Get Started Free</em> button.</li>
+      </ul>
+      <p>Use a dark translucent navy background and a subtle gold border. The gold and blue flowing light trails should sit <strong>behind</strong> the panel, near the bottom of the page.</p>
+      <div class="callout"><strong>One important correction:</strong> The current gold and purple light effect is concentrated mostly on the right. Make it more balanced and reduce its brightness — it should support the CTA rather than compete with it.</div>
+    </section>
+
+    <!-- ══════════ 12. CARD STRUCTURE ══════════ -->
+    <section>
+      <h2><span class="num">12</span> Feature Cards — Common Mistakes Across All Six Sections <span class="tag crit">Image treatment</span></h2>
+      <p>A common image-treatment issue across the current cards:</p>
+      <ul>
+        <li>The photographs are <strong>too dark</strong>.</li>
+        <li>The text and UI are technically placed above the images, but the overlay hides too much of the actual scene.</li>
+      </ul>
+      <h3>Use the correct three-layer structure</h3>
+      <ul>
+        <li><strong>Layer 1 — Photography:</strong> the photograph should be visible and recognizable.</li>
+        <li><strong>Layer 2 — Gradient overlay:</strong> a darker area behind text, gradually becoming transparent across the image.</li>
+        <li><strong>Layer 3 — Interactive UI:</strong> phone screens, volume controls, alerts, graphs and switches.</li>
+      </ul>
+      <h3>Recommended card overlay</h3>
+      <pre><code>.feature-card {
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    rgba(5, 9, 24, 0.94) 0%,
+    rgba(5, 9, 24, 0.80) 30%,
+    rgba(5, 9, 24, 0.38) 65%,
+    rgba(5, 9, 24, 0.15) 100%
+  );
+
+  pointer-events: none;
+}
+
+.feature-card &gt; * {
+  position: relative;
+  z-index: 1;
+}</code></pre>
+      <p>The left side stays dark enough for text. The centre remains visible. The right side shows the photograph and demonstration.</p>
+      <div class="callout"><strong>Do not</strong> apply <code>opacity: 0.5</code> to the entire card — that would also make text, buttons and UI controls transparent.</div>
+    </section>
+
+    <!-- ══════════ 13. DIMENSIONS ══════════ -->
+    <section>
+      <h2><span class="num">13</span> Correct Page Dimensions and Responsive Layout</h2>
+      <p>Recommended desktop proportions to replace the current compressed layout:</p>
+      <table>
+        <tr><th>Element</th><th>Recommended desktop sizing</th></tr>
+        <tr><td>Main page width</td><td>1280 px maximum</td></tr>
+        <tr><td>Outer gutter</td><td>20–40 px</td></tr>
+        <tr><td>Header height</td><td>72–84 px</td></tr>
+        <tr><td>Hero height</td><td>400–440 px</td></tr>
+        <tr><td>First feature card</td><td>230–250 px</td></tr>
+        <tr><td>Half-width feature cards</td><td>210–230 px</td></tr>
+        <tr><td>Energy full-width card</td><td>220–240 px</td></tr>
+        <tr><td>Card gaps</td><td>14–18 px</td></tr>
+        <tr><td>Card border radius</td><td>24–28 px</td></tr>
+        <tr><td>CTA width</td><td>960–1050 px</td></tr>
+        <tr><td>CTA height</td><td>110–125 px</td></tr>
+      </table>
+      <h3>For the grid</h3>
+      <pre><code>.features-grid {
+  width: min(1280px, calc(100% - 40px));
+  margin-inline: auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.feature-card:first-child,
+.feature-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.feature-card:first-child {
+  min-height: 240px;
+}
+
+.feature-card:not(:first-child):not(:last-child) {
+  min-height: 220px;
+}
+
+.feature-card:last-child {
+  min-height: 230px;
+}
+
+@media (max-width: 700px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+    width: calc(100% - 32px);
+  }
+
+  .feature-card:first-child,
+  .feature-card:last-child {
+    grid-column: auto;
+  }
+}</code></pre>
+      <p>On mobile, stack text and controls vertically. Never let the phone interface, controls or text overlap.</p>
+    </section>
+
+    <!-- ══════════ 14. ROOT CAUSES ══════════ -->
+    <section>
+      <h2><span class="num">14</span> Why These Mistakes Happened — Root Causes</h2>
+      <p>Important so the next iteration does not repeat the same problems:</p>
+      <table>
+        <tr><th>Mistake</th><th>Likely cause</th><th>Required correction</th></tr>
+        <tr><td>Narrow page</td><td>Container has a 700 px maximum width</td><td>Increase shared max width to 1280 px</td></tr>
+        <tr><td>Blank side areas</td><td>Cards are not using the available viewport width</td><td>Use a full-width main container</td></tr>
+        <tr><td>Horizontal background bands</td><td>Separate section backgrounds or wrapper backgrounds</td><td>Use one global background canvas</td></tr>
+        <tr><td>Purple area too large</td><td>A large gradient or decorative element positioned incorrectly</td><td>Use small radial gradients</td></tr>
+        <tr><td>Hero image has hard edge</td><td>Image is in a separate block without a fade</td><td>Use a full-bleed background and layered gradient</td></tr>
+        <tr><td>Small text</td><td>Typography scaled down with the narrow design</td><td>Specify desktop font sizes explicitly</td></tr>
+        <tr><td>Very dark feature images</td><td>Too much background overlay</td><td>Reduce overlay opacity toward the right</td></tr>
+        <tr><td>Small demo controls</td><td>UI panels squeezed into narrow cards</td><td>Increase card dimensions and interface area</td></tr>
+        <tr><td>Small CTA</td><td>Footer uses the same narrow container</td><td>Give CTA its own larger width</td></tr>
+        <tr><td>Poor mobile behaviour risk</td><td>Fixed dimensions and untested layout changes</td><td>Use responsive breakpoints and flexible grid sizing</td></tr>
+      </table>
+      <div class="callout blue"><strong>One important point:</strong> the screenshot alone cannot tell whether the background problem comes from separate CSS section backgrounds, nested wrappers or an incorrectly positioned pseudo-element. Inspect the existing CSS and DOM before changing them.</div>
+    </section>
+
+    <!-- ══════════ 15. TARGET STRUCTURE ══════════ -->
+    <section>
+      <h2><span class="num">15</span> What the Completed Page Should Look Like</h2>
+      <pre class="ascii"><code>Kova   Home · Features · Explore · Get Started
+
+POWERFUL. LOCAL. YOURS.
+Take Control.
+Live Smarter.
+[Premium house photograph across the hero, fading into navy behind the text]
+
+01 — FULL WIDTH
+Smart Presence &amp; Automations
+Large visual of person entering the house, with a realistic
+phone notification and live activity panel.
+
+02                        03
+Device Control            Switch Modes
+Large volume slider       Day, Evening and Night.
+and speaker.
+
+04                        05
+Security                  Family &amp; Access
+Camera interface and      Family profile and
+security notifications.   permission interface.
+
+06 — FULL WIDTH
+Energy, Climate &amp; Sensors
+Large thermostat, energy chart and sensor dashboard
+with interactive controls.
+
+Ready to experience Kova?
+A wider CTA with the gold Kova logo and Get Started button.
+                          Get Started Free →</code></pre>
+      <p><em>Structural layout illustration, not a screenshot or final visual mockup.</em></p>
+    </section>
+
+    <!-- ══════════ 16. PRIORITY ══════════ -->
+    <section>
+      <h2><span class="num">16</span> Priority Order — What to Fix First</h2>
+      <p>Do not make random visual adjustments. Fix in this order.</p>
+
+      <h3>Priority 1 — Fix the page foundation <span class="tag crit">Critical</span></h3>
+      <ul class="checklist">
+        <li>Inspect and correct the main container width. Target 1280 px.</li>
+        <li>Remove unintended scaling and narrow wrapper constraints.</li>
+        <li>Create one continuous global navy background.</li>
+        <li>Remove unwanted horizontal colour bands.</li>
+      </ul>
+
+      <h3>Priority 2 — Correct the visual composition <span class="tag high">High</span></h3>
+      <ul class="checklist">
+        <li>Fix hero photograph blending and alignment.</li>
+        <li>Increase heading and body font sizes.</li>
+        <li>Make every feature image brighter and more visible.</li>
+        <li>Increase feature-card heights and interface sizes.</li>
+      </ul>
+
+      <h3>Priority 3 — Complete the experience <span class="tag ok">Important</span></h3>
+      <ul class="checklist">
+        <li>Improve phone, security, family and energy dashboards.</li>
+        <li>Verify all interactive controls work.</li>
+        <li>Increase footer CTA size and balance the light trails.</li>
+        <li>Test desktop, tablet and mobile layouts.</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FINAL INSTRUCTIONS ══════════ -->
+    <section>
+      <h2>Final Instructions for the Fix Pass</h2>
+      <p>This is a <strong>correction of an existing design</strong>, not a request to create another layout.</p>
+      <blockquote class="agent">
+        <p>Fix the existing Kova landing page based on the supplied screenshot. Do not redesign the website from scratch or remove any of its six feature sections.</p>
+        <p>The current implementation has a major content-width problem. Its main container is approximately 700 px wide on a 1308 px screen, creating enormous empty margins. Expand the main page container to a maximum width of approximately 1280 px and use consistent alignment across the header, hero and feature grid.</p>
+        <p>The global background is also incorrect. Replace the disconnected horizontal background colour bands with one continuous midnight-navy background. Use <code>#050918</code> as the foundation, <code>#0B1230</code> for subtle depth, restrained blue radial gradients and small purple atmospheric glows. Do not use large purple rectangles or different solid backgrounds for individual page sections.</p>
+        <p>Make the hero photograph full-width and blend it into the dark background with a smooth left-to-right gradient. Remove the abrupt vertical edge between the house photograph and the text area.</p>
+        <p>Increase the heading, paragraph and interface sizes. The feature photographs must be visible rather than hidden behind excessive dark overlays. Use a darker gradient behind the text on the left and more transparency toward the right.</p>
+        <p>Keep the exact six-feature order and existing feature content. Improve the dimensions of the interactive interfaces: the arrival notification and phone, volume slider, mode selector, security camera, family profiles, thermostat and energy graph.</p>
+        <p>Make the first feature demonstration clearly show an initial idle state and a triggered arrival event. Ensure that all the controls are functional.</p>
+        <p>Make the footer CTA wider and taller. Keep the gold and blue light trails subtle and balanced.</p>
+        <p>First inspect the current HTML, components and CSS. Identify the rules causing the narrow page width, background bands and scaling problems. Correct those causes instead of adding more CSS overrides on top of broken styles.</p>
+        <p>Preserve responsive behaviour and test the final result at desktop, tablet and mobile sizes.</p>
+      </blockquote>
+    </section>
+
+    <div class="final">
+      <h2>Final Recommendation</h2>
+      <p>Fix the <strong>page width</strong> and <strong>global background</strong> before touching individual cards — those two corrections will solve a significant portion of the visual problems immediately. Then improve the hero blending and card visibility. The existing six-feature concept is good; it needs to be presented at the correct scale with a consistent background system.</p>
+    </div>
+
+  </div>
+</body>
+</html>

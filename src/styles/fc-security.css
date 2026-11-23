@@ -1,0 +1,174 @@
+/* ==========================================================================
+   CARD 04 — Enhanced Security & Peace of Mind
+   ========================================================================== */
+
+.sec-panel {
+  width: min(392px, 66%);
+  padding: 11px 12px;
+}
+.sec-feed {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sec-feed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sec-live {
+  position: absolute;
+  left: 9px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-2);
+  background: rgba(10, 14, 22, 0.8);
+  padding: 4px 9px;
+  border-radius: 99px;
+}
+.sec-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.sec-live.hot {
+  color: #ff9aa1;
+}
+.sec-live.hot i {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(255, 92, 108, 0.9);
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+.sec-expand {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 14, 22, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.sec-expand:hover {
+  background: rgba(10, 14, 22, 0.95);
+}
+
+/* Red detection frame over the entrance path */
+.sec-frame {
+  position: absolute;
+  left: 53%;
+  top: 42%;
+  width: 16%;
+  height: 48%;
+  border: 2px solid var(--red);
+  border-radius: 8px;
+  box-shadow: 0 0 16px rgba(255, 92, 108, 0.55);
+  animation: sec-blink 1.2s ease-in-out infinite;
+}
+@keyframes sec-blink {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Alert banner above the feed */
+.sec-banner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 11px;
+  margin-bottom: 9px;
+  background: rgba(255, 92, 108, 0.13);
+  border: 1px solid rgba(255, 92, 108, 0.42);
+  color: #ffb3b9;
+}
+.sec-banner svg {
+  flex-shrink: 0;
+  color: #ff8f98;
+}
+.sec-banner p {
+  flex: 1;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.sec-banner strong {
+  display: block;
+  color: #ff8f98;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sec-now {
+  font-size: 9px;
+  font-weight: 800;
+  color: #ff8f98;
+}
+
+.sec-status {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 9px 2px 0;
+}
+.sec-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 7px;
+}
+.sec-note {
+  font-size: 9.5px;
+  color: var(--text-3);
+  margin-top: 7px;
+}
+
+/* Fullscreen preview overlay */
+.sec-full {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: rgba(4, 6, 12, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: auto;
+}
+.sec-full-frame {
+  position: relative;
+  width: min(760px, 92vw);
+}
+.sec-full-close {
+  position: absolute;
+  top: -42px;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(13, 18, 30, 0.8);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+.sec-full-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 1099px) {
+  .sec-panel {
+    width: min(420px, 100%);
+  }
+}

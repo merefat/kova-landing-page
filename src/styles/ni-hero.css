@@ -1,0 +1,205 @@
+/* ==========================================================================
+   INTEGRATIONS — hero: night-house image right, copy left, orbit overlay.
+   ========================================================================== */
+
+.ni-hero {
+  position: relative;
+  margin-top: -76px;           /* slide under the transparent sticky header */
+  min-height: 560px;
+  padding: 150px 0 90px;
+  overflow: hidden;
+}
+
+/* The image fills the hero, pinned right. The left overlay keeps the
+   copy readable over it; a bottom fade melts it into the page. */
+.ni-hero-media { position: absolute; inset: 0; }
+.ni-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+}
+.ni-hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 11, 18, 0.97) 0%, rgba(8, 11, 18, 0.9) 34%, rgba(8, 11, 18, 0.45) 60%, rgba(8, 11, 18, 0.25) 100%),
+    linear-gradient(0deg, var(--ni-page-0) 0%, rgba(8, 11, 18, 0.1) 26%, transparent 55%);
+}
+
+.ni-hero-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+
+.ni-hero-copy { max-width: 600px; }
+
+.ni-hero-h1 {
+  margin: 14px 0 16px;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ni-text-1);
+}
+.ni-hero-h1-hi {
+  display: block;
+  background: linear-gradient(100deg, #FFD477, #F4B942 55%, #D99B30);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ni-hero-sub {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ni-text-2);
+  max-width: 54ch;
+}
+
+.ni-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 26px;
+}
+.ni-stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--ni-border);
+  background: rgba(20, 26, 37, 0.66);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ni-text-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ni-stat strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ni-text-1);
+  letter-spacing: 0;
+}
+.ni-stat:last-child strong { color: var(--ni-blue-hi); }
+
+.ni-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ----------------------------------------------------------------- orbit */
+.ni-hero-orbit { position: relative; aspect-ratio: 10 / 7; }
+.ni-orbit { width: 100%; height: 100%; }
+
+.ni-orbit-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ni-orbit-line {
+  stroke-dasharray: 6 10;
+  animation: ni-line-drift 9s linear infinite;
+  opacity: 0.8;
+}
+@keyframes ni-line-drift {
+  to { stroke-dashoffset: -160; }
+}
+
+.ni-orbit-hub {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.ni-orbit-hub-ring {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(244, 185, 66, 0.5);
+  box-shadow: 0 0 44px rgba(244, 185, 66, 0.35), inset 0 0 24px rgba(244, 185, 66, 0.12);
+  animation: ni-hub-pulse 7s ease-in-out infinite;
+}
+@keyframes ni-hub-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.07); opacity: 0.6; }
+}
+.ni-orbit-hub-core {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #16110A;
+  background: linear-gradient(140deg, #FFD477, #F4B942, #D99B30);
+  box-shadow: 0 10px 34px rgba(244, 185, 66, 0.5);
+}
+.ni-orbit-hub-label {
+  position: absolute;
+  top: calc(50% + 56px);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ni-amber-hi);
+  white-space: nowrap;
+  text-shadow: 0 2px 12px rgba(8, 11, 18, 0.9);
+}
+
+.ni-orbit-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ni-border-hi);
+  background: rgba(20, 26, 37, 0.88);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(84, 168, 244, 0.12);
+  cursor: pointer;
+  transition: transform 0.18s var(--ni-ease), box-shadow 0.18s var(--ni-ease),
+    border-color 0.18s var(--ni-ease);
+  animation: ni-node-glow 8s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes ni-node-glow {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 14px rgba(84, 168, 244, 0.1); }
+  50% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 26px rgba(84, 168, 244, 0.3); }
+}
+.ni-orbit-node:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.ni-orbit.is-still .ni-orbit-line,
+.ni-orbit.is-still .ni-orbit-hub-ring,
+.ni-orbit.is-still .ni-orbit-node { animation: none; }
+
+/* ------------------------------------------------------------ responsive */
+@media (max-width: 1023px) {
+  .ni-hero { padding: 130px 0 70px; }
+  .ni-hero-inner { grid-template-columns: 1fr; gap: 8px; }
+  .ni-hero-orbit { max-width: 560px; width: 100%; margin: 0 auto; }
+  /* two outer nodes go away on the small stage — lines 3 & 6 match them */
+  .ni-orbit-node-2, .ni-orbit-node-5 { display: none; }
+  .ni-orbit-line:nth-of-type(3), .ni-orbit-line:nth-of-type(6) { display: none; }
+  .ni-hero-shade {
+    background:
+      linear-gradient(90deg, rgba(8, 11, 18, 0.95) 0%, rgba(8, 11, 18, 0.72) 55%, rgba(8, 11, 18, 0.4) 100%),
+      linear-gradient(0deg, var(--ni-page-0) 0%, rgba(8, 11, 18, 0.12) 30%, transparent 60%);
+  }
+}
+
+@media (max-width: 767px) {
+  .ni-hero { min-height: 0; padding: 118px 0 56px; }
+  .ni-hero-h1 { font-size: 40px; }
+  .ni-hero-sub { font-size: 14.5px; }
+  .ni-hero-orbit { margin-top: 10px; }
+  .ni-orbit-node { width: 40px; height: 40px; }
+  .ni-orbit-hub-ring { width: 76px; height: 76px; }
+  .ni-orbit-hub-core { width: 48px; height: 48px; }
+  .ni-orbit-hub-label { top: calc(50% + 46px); }
+}

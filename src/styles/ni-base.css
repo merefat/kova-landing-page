@@ -1,0 +1,241 @@
+/* ==========================================================================
+   INTEGRATIONS (/integrations) — base tokens, atmosphere, shared bits.
+   All selectors are prefixed ni- so nothing leaks into the other routes.
+   Tokens are namespaced --ni-* on :root because the guide drawer is
+   portalled to <body> and still needs them.
+   ========================================================================== */
+
+:root {
+  --ni-page-0: #080B12;
+  --ni-page-1: #0B101A;
+  --ni-page-2: #0E1522;
+  --ni-surface-1: #141A25;
+  --ni-surface-2: #1A2230;
+  --ni-surface-3: #232D3F;
+  --ni-border: rgba(255, 255, 255, 0.09);
+  --ni-border-hi: rgba(255, 255, 255, 0.22);
+  --ni-text-1: #F5F6FA;
+  --ni-text-2: #B7BECC;
+  --ni-text-3: #818B9D;
+  --ni-amber: #F4B942;
+  --ni-amber-hi: #FFD477;
+  --ni-amber-deep: #D99B30;
+  --ni-blue: #54A8F4;
+  --ni-blue-hi: #7FBCF7;
+  --ni-violet: #9274ED;
+  --ni-violet-hi: #A996F2;
+  --ni-green: #26C994;
+  --ni-red: #FF5C6C;
+  --ni-icon-amber: #FFD477;
+  --ni-icon-blue: #54A8F4;
+  --ni-icon-violet: #9274ED;
+  --ni-icon-green: #26C994;
+  --ni-font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ni-ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+/* Page atmosphere — same canvas as the rest of the site plus two soft
+   glows. Scoped to the route class App.jsx puts on .page. */
+.page.route-integrations {
+  background:
+    radial-gradient(ellipse at 70% 5%, rgba(45, 67, 112, 0.22), transparent 38%),
+    radial-gradient(760px 480px at 8% 32%, rgba(244, 185, 66, 0.05), transparent 60%),
+    linear-gradient(180deg, #080B12 0%, #0B101A 48%, #080B12 100%);
+}
+
+.ni {
+  color: var(--ni-text-1);
+  font-family: var(--ni-font-display);
+}
+
+.ni h1, .ni h2, .ni h3, .ni p { margin: 0; }
+
+/* ---------------------------------------------------------------- glass */
+.ni-panel {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid var(--ni-border);
+  background: linear-gradient(145deg, rgba(26, 34, 48, 0.82), rgba(11, 16, 26, 0.94));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+@media (min-width: 769px) {
+  .ni-panel {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+/* -------------------------------------------------------------- eyebrow */
+.ni-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ni-amber-hi);
+}
+.ni-eyebrow-blue { color: var(--ni-blue-hi); }
+.ni-eyebrow-violet { color: var(--ni-violet-hi); }
+
+/* ------------------------------------------------------------- sections */
+.ni-sec {
+  margin-top: clamp(44px, 6vw, 84px);
+  scroll-margin-top: 92px;
+}
+.ni-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.ni-sec-head-row {
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.ni-sec-title {
+  font-family: var(--ni-font-display);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ni-text-1);
+}
+
+/* --------------------------------------------------------------- pills */
+.ni-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--ni-border);
+  color: var(--ni-text-2);
+  background: rgba(18, 24, 37, 0.7);
+  white-space: nowrap;
+}
+.ni-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ni-text-3);
+  flex: none;
+}
+.ni-pill-neutral { color: var(--ni-text-2); }
+.ni-pill-blue { color: var(--ni-blue-hi); border-color: rgba(84, 168, 244, 0.35); }
+.ni-pill-blue .ni-pill-dot { background: var(--ni-blue); box-shadow: 0 0 8px var(--ni-blue); }
+.ni-pill-green { color: var(--ni-green); border-color: rgba(38, 201, 148, 0.4); }
+.ni-pill-green .ni-pill-dot { background: var(--ni-green); box-shadow: 0 0 8px var(--ni-green); }
+.ni-pill-amber { color: var(--ni-amber-hi); border-color: rgba(244, 185, 66, 0.4); }
+.ni-pill-amber .ni-pill-dot { background: var(--ni-amber); box-shadow: 0 0 8px var(--ni-amber); }
+.ni-pill-red { color: var(--ni-red); border-color: rgba(255, 92, 108, 0.4); }
+.ni-pill-red .ni-pill-dot { background: var(--ni-red); }
+.ni-pill-dim { color: var(--ni-text-3); }
+.ni-conn-count { font-size: 11.5px; }
+
+/* -------------------------------------------------------------- buttons */
+.ni-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--ni-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ni-text-1);
+  background: none;
+  cursor: pointer;
+  transition: transform 0.18s var(--ni-ease), box-shadow 0.18s var(--ni-ease),
+    border-color 0.18s var(--ni-ease), background 0.18s var(--ni-ease);
+}
+.ni-btn-primary {
+  background: linear-gradient(105deg, #FFD477, #F4B942, #D99B30);
+  color: #16110A;
+  box-shadow: 0 8px 26px rgba(244, 185, 66, 0.28);
+}
+.ni-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(244, 185, 66, 0.4);
+}
+.ni-btn-ghost {
+  border-color: var(--ni-border-hi);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--ni-text-1);
+}
+.ni-btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-1px);
+}
+.ni-btn-sm { padding: 9px 16px; font-size: 13px; }
+.ni-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+.ni-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  font-family: var(--ni-font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ni-amber-hi);
+  cursor: pointer;
+  transition: color 0.15s var(--ni-ease);
+}
+.ni-text-link:hover { color: var(--ni-amber); }
+
+/* ------------------------------------------------------------ the tiles */
+.ni-tile-chev { color: var(--ni-text-3); flex: none; }
+
+/* icon chip tones */
+[data-tone] { --ni-tone: var(--ni-icon-amber); }
+[data-tone='blue'] { --ni-tone: var(--ni-icon-blue); }
+[data-tone='violet'] { --ni-tone: var(--ni-icon-violet); }
+[data-tone='green'] { --ni-tone: var(--ni-icon-green); }
+
+.ni-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ni-amber-hi);
+  border: 1px solid rgba(244, 185, 66, 0.4);
+  background: rgba(244, 185, 66, 0.08);
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+/* focus rings — keep the pill radius consistent with each component */
+.ni .ni-btn:focus-visible,
+.ni .ni-tile:focus-visible,
+.ni .ni-cloud-card:focus-visible,
+.ni .ni-svc-card:focus-visible,
+.ni .ni-side-item:focus-visible,
+.ni .ni-orbit-node:focus-visible,
+.ni .ni-ov-row:focus-visible,
+.ni .ni-text-link:focus-visible,
+.ni .ni-help-link:focus-visible,
+.ni .ni-cloud-arrow:focus-visible {
+  outline: 2px solid var(--ni-amber);
+  outline-offset: 2px;
+}
+.ni .ni-tile:focus-visible,
+.ni .ni-cloud-card:focus-visible,
+.ni .ni-svc-card:focus-visible { border-radius: 18px; }
+.ni .ni-side-item:focus-visible { border-radius: 14px; }
+.ni .ni-orbit-node:focus-visible { border-radius: 50%; }
+.ni .ni-ov-row:focus-visible { border-radius: 12px; }

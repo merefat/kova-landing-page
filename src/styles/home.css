@@ -1,0 +1,600 @@
+/* ==========================================================================
+   HOME — cinematic dark sections, gold accents, varied card compositions
+   ========================================================================== */
+
+main > section:not(.hero) {
+  margin-top: 26px;
+}
+
+.card-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.card-kicker.gold {
+  color: var(--gold);
+}
+.card-kicker.indigo {
+  color: #9d8cf5;
+}
+
+.pm-title {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.22;
+  margin-bottom: 7px;
+}
+
+/* ==========================================================================
+   HERO — full-bleed villa at dusk; the in-phone light slider drives --lvl
+   ========================================================================== */
+.hero {
+  position: relative;
+  margin-top: -76px; /* slide under the transparent sticky header */
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 66% 52%;
+  filter: brightness(calc(0.42 + var(--lvl, 0.72) * 0.85));
+  transition: filter 0.3s ease;
+}
+/* readability scrims: strong left fade + bottom fade into page */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 8, 15, 0.98) 0%,
+      rgba(5, 8, 15, 0.86) 30%,
+      rgba(5, 8, 15, 0.36) 60%,
+      rgba(5, 8, 15, 0.14) 100%
+    );
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(0deg, rgba(8, 11, 18, 0.95), transparent 34%),
+    radial-gradient(ellipse at 72% 30%, rgba(84, 168, 244, 0.1), transparent 55%);
+}
+/* warm window glow that follows the phone slider */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 70% 45%, rgba(255, 190, 90, 0.34), transparent 52%),
+    radial-gradient(ellipse at 88% 18%, rgba(255, 214, 140, 0.16), transparent 45%);
+  opacity: calc(var(--lvl, 0.72) * 0.85);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 640px;
+  padding-top: 96px;
+  padding-bottom: 56px;
+  z-index: 2;
+}
+.hero-copy {
+  max-width: 500px;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin-bottom: 18px;
+}
+.hero-title {
+  font-size: clamp(40px, 5.2vw, 62px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+.hero-title em {
+  font-style: normal;
+  color: var(--gold);
+}
+.hero-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-2);
+  max-width: 430px;
+  margin-bottom: 28px;
+}
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.hero-cta {
+  padding: 14px 26px;
+  font-size: 14px;
+}
+.hero-watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+.hero-watch:hover {
+  border-color: rgba(244, 185, 66, 0.55);
+  background: rgba(244, 185, 66, 0.08);
+  transform: translateY(-1px);
+}
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.hero-trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.hero-trust svg {
+  color: var(--gold);
+}
+
+/* ==========================================================================
+   HERO PANEL — floating Kova device sheet (cream UI, amber fill) driving --lvl
+   ========================================================================== */
+.hero-panel-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 320px;
+  max-width: 100%;
+}
+.hero-panel-hint {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-align: center;
+  max-width: 260px;
+}
+.hp-sheet {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 18px;
+  border-radius: var(--r-card);
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    var(--shadow-panel),
+    0 0 44px rgba(244, 185, 66, 0.12);
+}
+.hp-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.hp-dev-ic {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--text-3);
+  background: var(--panel-soft);
+  border: 1px solid var(--stroke);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.hp-dev-ic.on {
+  color: var(--gold);
+  background: radial-gradient(circle at 35% 30%, rgba(244, 185, 66, 0.22), rgba(244, 185, 66, 0.07));
+  border-color: rgba(244, 185, 66, 0.3);
+}
+.hp-dev {
+  flex: 1;
+  min-width: 0;
+}
+.hp-room {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.hp-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.hp-state {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-top: 1px;
+}
+.hp-sw {
+  position: relative;
+  flex-shrink: 0;
+  width: 42px;
+  height: 25px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--stroke);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.hp-sw i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #aab3c4;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+.hp-sw.on {
+  background: rgba(244, 185, 66, 0.4);
+  border-color: rgba(244, 185, 66, 0.6);
+}
+.hp-sw.on i {
+  transform: translateX(18px);
+  background: var(--gold);
+}
+.hp-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 7px;
+}
+.hp-bar {
+  position: relative;
+  height: 42px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--stroke-soft);
+  overflow: hidden;
+}
+.hp-bar:focus-within {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.hp-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--fill, 0%);
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  color: var(--ink);
+  background: linear-gradient(90deg, var(--gold-lo), var(--gold));
+  border-right: 2px solid rgba(255, 255, 255, 0.55);
+  transition: width 0.12s ease;
+  overflow: hidden;
+}
+.hp-bar-val {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+  pointer-events: none;
+}
+.hp-bar.off .hp-bar-val {
+  color: var(--text-3);
+}
+.hp-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.hp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 42px;
+  background: transparent;
+  border: none;
+}
+.hp-slider::-moz-range-track {
+  background: transparent;
+}
+.hp-slider::-moz-range-thumb {
+  width: 28px;
+  height: 42px;
+  background: transparent;
+  border: none;
+}
+.hp-slider:disabled {
+  cursor: default;
+}
+.hp-steps {
+  display: flex;
+  gap: 8px;
+}
+.hp-steps button {
+  flex: 1;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--stroke);
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.hp-steps button:hover:not(:disabled) {
+  color: var(--gold-hi);
+  border-color: rgba(244, 185, 66, 0.4);
+  background: rgba(244, 185, 66, 0.08);
+}
+.hp-steps button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.hp-scenes {
+  display: flex;
+  gap: 8px;
+}
+.hp-scenes button {
+  flex: 1;
+  padding: 9px 6px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--stroke);
+  transition: all 0.16s ease;
+}
+.hp-scenes button:hover:not(:disabled) {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.hp-scenes button.active {
+  color: var(--gold-hi);
+  background: rgba(244, 185, 66, 0.12);
+  border-color: rgba(244, 185, 66, 0.4);
+}
+.hp-scenes button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.hp-info {
+  background: var(--panel-soft);
+  border: 1px solid var(--stroke-soft);
+  border-radius: var(--r-md);
+  padding: 11px 13px;
+}
+.hp-info-row {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+.hp-info-row + .hp-info-row {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid var(--stroke-soft);
+}
+.hp-info-row svg {
+  color: var(--text-3);
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.hp-info-k {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.hp-info-t {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+/* ==========================================================================
+   02 — THE PROBLEM (single full-width card)
+   ========================================================================== */
+.pm-card {
+  min-height: 380px;
+  padding: 24px;
+}
+/* photo takes most of the card, fades into the text side */
+.pm-problem {
+  background:
+    radial-gradient(ellipse at 95% 20%, rgba(120, 130, 150, 0.12), transparent 55%),
+    var(--bg-elev);
+}
+.pm-photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 62%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 46% 38%;
+  opacity: 0.9;
+}
+.pm-problem::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--bg-elev) 0%,
+    var(--bg-elev) 38%,
+    rgba(17, 24, 39, 0.55) 60%,
+    rgba(17, 24, 39, 0.12) 100%
+  );
+}
+.pm-problem-body {
+  position: relative;
+  z-index: 2;
+  max-width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.pm-list {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.pm-list li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--stroke-soft);
+}
+.pm-list svg {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .pm-problem-body {
+    max-width: 46%;
+  }
+  .pm-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    margin-top: -76px;
+    min-height: 560px;
+  }
+  .hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 34px;
+    min-height: 560px;
+    padding-top: 96px;
+  }
+  .hero-panel-wrap {
+    align-self: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .hero-inner {
+    min-height: 540px;
+  }
+  .hero-img {
+    object-position: 62% 50%;
+  }
+  .hero::before {
+    background: linear-gradient(
+      90deg,
+      rgba(5, 8, 15, 0.97) 0%,
+      rgba(5, 8, 15, 0.82) 55%,
+      rgba(5, 8, 15, 0.4) 100%
+    );
+  }
+  .hero-title {
+    font-size: 36px;
+  }
+  .hero-desc {
+    font-size: 14.5px;
+  }
+  .hero-ctas {
+    gap: 10px;
+  }
+  .hero-cta,
+  .hero-watch {
+    padding: 12px 19px;
+    font-size: 13px;
+  }
+  /* Problem card stacks: photo strip on top, text full width below */
+  .pm-problem {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0 0 22px;
+  }
+  .pm-photo {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    object-position: 50% 30%;
+    opacity: 0.8;
+  }
+  .pm-problem::after {
+    background: linear-gradient(180deg, transparent 0%, var(--bg-elev) 190px, var(--bg-elev) 100%);
+  }
+  .pm-problem-body {
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+    padding: 8px 22px 0;
+  }
+  .pm-list {
+    grid-template-columns: 1fr;
+    margin-top: 14px;
+  }
+}

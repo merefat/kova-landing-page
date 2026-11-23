@@ -1,0 +1,108 @@
+/* ==========================================================================
+   INTEGRATIONS — /integrations/<id> full guide page. Reuses the drawer's
+   ni-guide-* / ni-done-* / ni-banner / ni-need / ni-code styles; these are
+   the page-only layout pieces (plus .ni-guide-fulllink used in the drawer).
+   ========================================================================== */
+
+.ni-page {
+  max-width: 880px;
+  padding-top: clamp(96px, 12vw, 136px);
+  padding-bottom: clamp(64px, 8vw, 110px);
+}
+
+.ni-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  margin-bottom: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--ni-border);
+  background: rgba(18, 24, 37, 0.55);
+  color: var(--ni-text-2);
+  font-family: var(--ni-font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s var(--ni-ease), border-color 0.15s var(--ni-ease);
+}
+.ni-page-back:hover { color: var(--ni-text-1); border-color: var(--ni-border-hi); }
+
+.ni-page-head { padding: 0 0 20px; }
+.ni-page-title { font-size: clamp(25px, 3.4vw, 33px); }
+.ni-page-eyebrow { display: block; margin-top: 20px; }
+.ni-page-sum { font-size: 15px; max-width: 68ch; }
+.ni-page-needs { margin-top: 16px; }
+
+/* ------------------------------------------------------- method panels */
+.ni-page-method,
+.ni-page-gets {
+  margin-top: 26px;
+  padding: clamp(18px, 3vw, 28px);
+}
+.ni-page-method-head { margin-bottom: 8px; }
+.ni-page-method-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.ni-page-method-needs { margin-top: 9px; }
+.ni-page-method-apply {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ni-text-3);
+}
+
+/* ----------------------------------------------------------- the steps */
+.ni-psteps {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.ni-pstep {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+}
+.ni-pstep + .ni-pstep { border-top: 1px dashed rgba(255, 255, 255, 0.08); }
+.ni-pstep-marker {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ni-amber-hi);
+  background: rgba(244, 185, 66, 0.1);
+  border: 1px solid rgba(244, 185, 66, 0.32);
+}
+.ni-pstep-body { min-width: 0; flex: 1; }
+.ni-pstep-title {
+  margin: 0 0 4px;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ni-text-1);
+}
+.ni-pstep-body > p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ni-text-2);
+}
+
+/* ----------------------------------------------------------- gets + 404 */
+.ni-page-gets .ni-done-actions { margin-top: 18px; }
+.ni-page-missing-title {
+  margin-top: 10px;
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 800;
+}
+.ni-page-missing .ni-btn { margin-top: 22px; }
+
+/* ------------------------------------------- "Full guide" link (drawer) */
+.ni-guide-fulllink { font-size: 12px; }

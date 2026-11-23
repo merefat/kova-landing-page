@@ -1,0 +1,65 @@
+/* ==========================================================================
+   KOVA — DESIGN TOKENS
+   Dark cinematic canvas (#080B12), controlled gold accent (#F4B942),
+   functional blue / green / purple highlights.
+   ========================================================================== */
+
+:root {
+  /* Canvas */
+  --bg: #080B12;
+  --bg-2: #0B101A;
+  --bg-elev: #111827;
+  --card: #141A25;
+  --card-elev: #1A2230;
+  --panel: rgba(18, 24, 37, 0.78);
+  --panel-solid: #121825;
+  --panel-soft: rgba(255, 255, 255, 0.045);
+
+  /* Lines */
+  --stroke: rgba(255, 255, 255, 0.09);
+  --stroke-soft: rgba(255, 255, 255, 0.055);
+  --stroke-gold: rgba(244, 185, 66, 0.35);
+
+  /* Brand */
+  --gold: #F4B942;
+  --gold-2: #D99B30;
+  --gold-hi: #FFD477;
+  --gold-lo: #D99B30;
+  --amber: #FFC54A;
+  --gold-soft: rgba(244, 185, 66, 0.12);
+  --gold-glow: rgba(244, 185, 66, 0.42);
+
+  /* Functional accents */
+  --blue: #54A8F4;
+  --blue-deep: #2E6BC8;
+  --cyan: #40C7FF;
+  --purple: #9274ED;
+  --green: #26C994;
+  --red: #FF5C6C;
+
+  /* Text */
+  --text: #F5F6FA;
+  --text-2: #B7BECC;
+  --text-3: #818B9D;
+  --ink: #16110A;
+
+  /* Shape */
+  --r-card: 22px;
+  --r-panel: 18px;
+  --r-md: 14px;
+  --r-sm: 10px;
+  --r-pill: 999px;
+
+  /* Type */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --container: 1280px;
+  --gutter: 40px;
+  --gap: 16px;
+
+  /* Elevation */
+  --shadow-card: 0 18px 50px rgba(0, 0, 0, 0.22);
+  --shadow-panel: 0 12px 35px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-gold: 0 0 12px rgba(244, 185, 66, 0.3), 0 0 26px rgba(244, 185, 66, 0.14);
+}

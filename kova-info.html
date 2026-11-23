@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kova — Platform & Product Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-border: #1f293d;
+      --surface-hover: #1a2336;
+      --text: #f3f4f6;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.15);
+      --accent: #818cf8;
+      --emerald: #34d399;
+      --amber: #fbbf24;
+      --rose: #f43f5e;
+      --card-radius: 14px;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+    }
+
+    /* Ambient background glow */
+    .glow-bg {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      padding: 60px 0 40px;
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: 40px;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .badge.green {
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--emerald);
+      border-color: rgba(52, 211, 153, 0.25);
+    }
+
+    .badge.purple {
+      background: rgba(129, 140, 248, 0.1);
+      color: var(--accent);
+      border-color: rgba(129, 140, 248, 0.25);
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 880px;
+      line-height: 1.65;
+    }
+
+    /* Quick jump navigation */
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 24px 0 40px;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--card-radius);
+    }
+
+    .nav-pill {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-pill:hover {
+      color: #fff;
+      background: var(--surface-border);
+    }
+
+    /* Section styling */
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 30px;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 22px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul.clean-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul.clean-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 0.93rem;
+      line-height: 1.5;
+    }
+
+    ul.clean-list li::before {
+      content: "•";
+      color: var(--primary);
+      font-weight: bold;
+      position: absolute;
+      left: 4px;
+      font-size: 1.1rem;
+    }
+
+    /* Code blocks / Pills */
+    code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--card-radius);
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: #0d1322;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--surface-border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tag-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .callout {
+      border-left: 3px solid var(--amber);
+      background: rgba(251, 191, 36, 0.05);
+      padding: 16px 20px;
+      border-radius: 0 var(--card-radius) var(--card-radius) 0;
+      margin: 16px 0;
+    }
+
+    .callout.danger {
+      border-left-color: var(--rose);
+      background: rgba(244, 63, 94, 0.05);
+    }
+
+    .callout.info {
+      border-left-color: var(--primary);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-bg"></div>
+
+  <div class="container">
+    <header>
+      <div class="badge-bar">
+        <span class="badge">ClickBIT Ecosystem</span>
+        <span class="badge green">Local-First Hub</span>
+        <span class="badge purple">Node 22 + SQLite</span>
+      </div>
+      <h1>Kova Platform & Feature Architecture</h1>
+      <p class="lead">
+        Kova is a local-first smart home platform designed by ClickBIT. Running directly on a local in-home hub, it talks directly to hardware without requiring cloud connectivity. Kova organizes home automation around time rhythms and house state (modes) rather than unorganized device lists.
+      </p>
+
+      <nav class="nav-pills">
+        <a href="#core-concepts" class="nav-pill">Core Concepts</a>
+        <a href="#sage-assistant" class="nav-pill">Sage AI</a>
+        <a href="#presence-detection" class="nav-pill">Presence</a>
+        <a href="#security-policy" class="nav-pill">Security & Easing</a>
+        <a href="#climate-zones" class="nav-pill">Climate & Zones</a>
+        <a href="#media-announcements" class="nav-pill">Media & Helix</a>
+        <a href="#integrations" class="nav-pill">Integrations (23+)</a>
+        <a href="#apps-ui" class="nav-pill">Web & Mobile Apps</a>
+        <a href="#matrix" class="nav-pill">Feature Matrix</a>
+      </nav>
+    </header>
+
+    <!-- 1. Core Architecture -->
+    <section id="core-concepts">
+      <h2 class="section-title">Core Concepts & Domain Model</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">14 Device Types</div>
+          <p>Full support for: Light, Dimmer, Fan, Media, TV, Plug, Camera, Sensor, Vacuum, Internet switch, Climate, Lock, Garage door, Alarm.</p>
+          <div class="tag-cluster">
+            <span class="tag">brightness</span><span class="tag">color-temp</span><span class="tag">hsv-color</span><span class="tag">power-metering</span><span class="tag">queues</span><span class="tag">zones</span><span class="tag">purifier</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Modes & Rhythms</div>
+          <p>The house is always in a Mode (Day, Evening, Wind down, Night, Dawn). Each mode sets device targets, triggered by a Rhythm:</p>
+          <ul class="clean-list">
+            <li>Clock time (e.g. 07:00)</li>
+            <li>Solar events (Dawn, Dusk, Sunset ± offset)</li>
+            <li>Islamic prayer times (Fajr, Maghrib ± offset)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Overlays & Moments</div>
+          <p><strong>Overlays</strong> are temporary overrides (Movie, Away, Party, Guest) ending by time, device-off, arrival, or manually.</p>
+          <p><strong>Moments</strong> are one-off timed daily actions (e.g., <em>"21:00 rain sounds"</em>).</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Full Rules Engine</div>
+          <p><strong>WHEN:</strong> State transitions, sensor thresholds, device events, time/solar/prayer, recurring intervals, presence events, hub boot.</p>
+          <p><strong>ONLY IF:</strong> State, reading, overnight windows, days, who's home, active mode, room activity, nested ALL/ANY/NOT.</p>
+          <p><strong>THEN:</strong> Set devices, delays, wait-until, notifications, overlays, if/else, repeat, announcements, value ramps, Sage tasks.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Explainability & Undo</div>
+          <ul class="clean-list">
+            <li><strong>Event Log:</strong> Every change logs its cause (mode, moment, overlay, behaviour, user, device, presence, assistant, automation, undo, system).</li>
+            <li><strong>"Why?" Feature:</strong> Explains instant reason behind device states.</li>
+            <li><strong>15-Minute Undo:</strong> Any user action can be rolled back.</li>
+            <li><strong>Day Preview:</strong> Visualize today's full plan at any hour.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Behaviours</div>
+          <p>Shipped with reactive behaviours such as <strong>Light the way</strong>:</p>
+          <p>Camera detection or arrival turns on targeted lights for <em>N</em> minutes, while strictly preserving any light already on.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Sage Assistant -->
+    <section id="sage-assistant">
+      <h2 class="section-title">Sage Assistant ("Ask Kova")</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Multi-Tier AI & Local Parser</div>
+          <ul class="clean-list">
+            <li><strong>Local Deterministic Parser:</strong> Zero cost, instant local intent execution.</li>
+            <li><strong>Learned Phrases:</strong> Replays previous clean AI responses locally.</li>
+            <li><strong>Supported LLM Engines:</strong> Anthropic (prompt caching), MiniMax, OpenAI, OpenAI-compatible servers, or local LLMs.</li>
+            <li><strong>Two Tiers:</strong> Everyday (Claude Haiku 5-5) + Main reasoning (Claude Sonnet 5-5), routed by heuristics or ClickBIT's <strong>Jev</strong> router.</li>
+            <li><strong>Hard Guardrails:</strong> Max 12 rounds/request, default <strong>$8/month</strong> budget. Background work halts at 60% daily share; owner notified at 80%.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Hub-Enforced Rules (Bypassing LLMs)</div>
+          <div class="callout danger">
+            <div class="callout-title">Non-Negotiable Hub Invariants</div>
+            The LLM cannot hallucinate or overstep:
+          </div>
+          <ul class="clean-list">
+            <li>Change ONLY what was asked — unsolicited full-house rewrites are blocked.</li>
+            <li>Detail edits rather than destructive rebuilds.</li>
+            <li>No claims without an actual successful tool execution result.</li>
+            <li>User "No" changes nothing; errors and failures are clearly communicated.</li>
+            <li>One-tap confirmation required for deletions, permission grants, or high autonomy actions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Presence & Notifications -->
+    <section id="presence-detection">
+      <h2 class="section-title">Presence & Notifications</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Multi-Signal Presence ("Who's Home")</div>
+          <p>Combines 5 independent inputs per person to ensure accurate presence:</p>
+          <ul class="clean-list">
+            <li><strong>OPNsense Router:</strong> ARP and NDP table sweeps every 30 seconds.</li>
+            <li><strong>Warden Router:</strong> Device tables and resident mapping.</li>
+            <li><strong>Network Ping:</strong> TCP 62078 probe designed for sleeping iPhones.</li>
+            <li><strong>Phone Automations:</strong> Shortcuts / Android POST with per-person key.</li>
+            <li><strong>Native App Geofence:</strong> 150m boundary background monitoring.</li>
+          </ul>
+          <div class="callout info">
+            <strong>Conflict Policy:</strong> Arrival wins instantly. Phone "left" beats router for 15 minutes. 10-minute away debounce prevents transient drops.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Alerts & Notifications</div>
+          <p>Channels: <strong>Web Push</strong> (VAPID), <strong>Expo Push</strong> (APNs/FCM), and <strong>ntfy</strong> (zero-setup HTTP).</p>
+          <ul class="clean-list">
+            <li>Doorbell ring with snapshot attachment.</li>
+            <li><em>"Everyone's out with lights on"</em> with a 1-tap <strong>Turn them off</strong> action.</li>
+            <li>Device offline (10m) & Link loss/restoration (5m).</li>
+            <li>Warden security events (WAN down/failover, rogue device, blocked threats).</li>
+            <li>Proactive snoozable insights: filter life, air quality, open doors (>N min), low battery, weather warnings.</li>
+            <li>Quiet hours and custom rate limits (every time, 1h, 6h, daily, never).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Security & Safety -->
+    <section id="security-policy">
+      <h2 class="section-title">Security Devices & Safe Easing</h2>
+      <div class="card">
+        <div class="card-title">Asymmetric Security Safety Standard</div>
+        <p>Security devices (Locks, Garage Doors, Alarms) are never treated as trivial on/off switches.</p>
+        <div class="grid-2" style="margin-top: 14px;">
+          <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px;">
+            <strong style="color: var(--emerald);">Securing (Lock / Close / Arm):</strong>
+            <p style="margin-top: 6px; font-size: 0.9rem;">Runs freely across automations, modes, voice bridges, Sage, and apps.</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px;">
+            <strong style="color: var(--rose);">Easing (Unlock / Open / Disarm):</strong>
+            <p style="margin-top: 6px; font-size: 0.9rem;"><strong>ALWAYS</strong> requires an explicit one-tap grant via memory-only SecureAsk cards (10 min TTL). Enforced at <code>Registry.command</code>.</p>
+          </div>
+        </div>
+        <ul class="clean-list" style="margin-top: 16px;">
+          <li><strong>Read-back Verification:</strong> 20–30s verification cycle confirms physical latching; jammed latches trigger instant alerts.</li>
+          <li><strong>Zero Voice Exposure:</strong> Easing commands are strictly excluded from Apple Home, Google, and Alexa bridges.</li>
+          <li><strong>Biometric Protection:</strong> Face ID / Touch ID enforced in native app before easing.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. Climate & Zones -->
+    <section id="climate-zones">
+      <h2 class="section-title">Rooms, Climate & Smart Zoning</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Ducted AC Zone Management</div>
+          <p>Physical motorized dampers (open/closed and percentage opening) mapped directly to rooms.</p>
+          <ul class="clean-list">
+            <li>Exposed to Apple Home, Google Home, and Alexa as independent virtual thermostats.</li>
+            <li><em>"Turn on the AC in Bedroom"</em> opens that zone damper, detects room temperature, considers season and weather forecast, and targets comfort baselines (Cool 24°C / Heat 21°C).</li>
+            <li>Conflict arbitration prevents one room from switching the compressor to heating while other zones are cooling.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Spatial Organization</div>
+          <ul class="clean-list">
+            <li>Rooms with custom iconography and ordering.</li>
+            <li>Room Groups (e.g., <em>"Upstairs"</em>, <em>"Downstairs"</em>).</li>
+            <li>Interactive Floor Plan Canvas: Draw rooms and walls, upload blueprints, place devices, and align robot vacuum maps.</li>
+            <li>One-tap "All Off" per room.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Media & Helix -->
+    <section id="media-announcements">
+      <h2 class="section-title">Media, Speakers & Helix Music</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">Supported Speakers</div>
+          <ul class="clean-list">
+            <li><strong>Google Cast:</strong> v2 protocol, Cast groups, sync.</li>
+            <li><strong>Sonos:</strong> UPnP protocol, dynamic grouping.</li>
+            <li><strong>AirPlay:</strong> Native output via OwnTone.</li>
+            <li><strong>Samsung Soundbars:</strong> Via SmartThings.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Kova Speaker Groups</div>
+          <p>Mix any speaker brand into a single synchronized group:</p>
+          <ul class="clean-list">
+            <li>Shared start moment with learned latency compensation.</li>
+            <li>Drift correction: 120ms at next track, 400ms immediate.</li>
+            <li>Per-part offsets (&minus;1000ms to +1000ms in 10ms steps).</li>
+            <li>Integrated click-track sync testing utility.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Helix & Announcements</div>
+          <ul class="clean-list">
+            <li><strong>Helix Server:</strong> Shuffle all, Loved, Playlists, Station search, lossless FLAC & AAC, played-count sync.</li>
+            <li><strong>Smart Intercom:</strong> Announcements play at dedicated volumes, pause active music, and execute exact state resume (track + exact second on Cast; full transport on Sonos).</li>
+            <li>TV & Display integration: Samsung Tizen WoL and doorbell auto-pause.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Integrations -->
+    <section id="integrations">
+      <h2 class="section-title">Integrations (23 Native + Compatibility Engine)</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">Local Hardware (18)</div>
+          <div class="tag-cluster">
+            <span class="tag">Tuya 3.3-3.5</span><span class="tag">Tapo KLAP</span><span class="tag">Hue CLIP v2</span><span class="tag">ESPHome Noise</span><span class="tag">Shelly RPC</span><span class="tag">Zigbee (herdsman)</span><span class="tag">Z-Wave (zwave-js)</span><span class="tag">Matter Controller</span><span class="tag">Google Cast</span><span class="tag">Sonos UPnP</span><span class="tag">AirPlay/OwnTone</span><span class="tag">AirCast</span><span class="tag">GoodWe Modbus</span><span class="tag">Samsung TV</span><span class="tag">HomeKit Devices</span><span class="tag">MQTT Discovery</span><span class="tag">Warden Router</span><span class="tag">Helix Media</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cloud Services (5)</div>
+          <div class="tag-cluster">
+            <span class="tag">Google Nest (SDM)</span><span class="tag">Ecovacs DEEBOT</span><span class="tag">SmartThings</span><span class="tag">ConnectLife (Hisense)</span><span class="tag">VeSync / Levoit</span>
+          </div>
+          <p style="margin-top: 12px;">Cloud connections are utilized strictly when no local interface exists on the appliance.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">HA Compatibility Engine</div>
+          <p>Runs a sandboxed, resource-limited Home Assistant instance bound to <code>127.0.0.1</code>.</p>
+          <ul class="clean-list">
+            <li>Allows any HA integration or custom HACS integration from GitHub.</li>
+            <li>Config flows run in Kova's UI; entities appear as native Kova devices.</li>
+            <li>Includes full HA backup importer with automation translator.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Mobile & Web Apps -->
+    <section id="apps-ui">
+      <h2 class="section-title">Client Applications & Ecosystem</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Web Application (PWA)</div>
+          <p>Comprehensive dashboard accessible locally or via tunnel:</p>
+          <ul class="clean-list">
+            <li>Views: Now, Modes, Automations Studio, Devices (List & Floor plan views), Sensors, Energy, Security, Media, Activity inbox, Sage AI, Integrations catalog, Settings.</li>
+            <li>Dedicated mobile web view (<code>phone.html</code>) and offline Service Worker.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Native Mobile App (iOS / Android)</div>
+          <p>Built with React Native & Expo for high-performance native interactions:</p>
+          <ul class="clean-list">
+            <li><strong>iOS:</strong> Home/Lock Screen widgets, Live Activity & Dynamic Island (with interactive "Skip" button for tonight's mode), Siri Shortcuts, Face ID app lock, 150m background geofence.</li>
+            <li><strong>Android:</strong> Home screen widgets, Quick Settings tiles, Biometric prompt.</li>
+            <li><strong>In-Hub OTA:</strong> Mobile app receives bundle updates directly from the local hub via <code>expo-updates</code> without waiting for store releases.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Matrix -->
+    <section id="matrix">
+      <h2 class="section-title">Feature & Capability Matrix</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 20%;">Category</th>
+              <th style="width: 80%;">User Capabilities & System Behaviors</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Everyday Control</strong></td>
+              <td>Turn devices on/off, dim lights, adjust warmth/color, set fan speeds/purifier modes, modulate ducted AC zones, lock/close security devices, pause/play/skip media, control volume/mute, clean rooms with robot vacuums, control Samsung/Helix TVs, toggle per-device internet access, room "All Off".</td>
+            </tr>
+            <tr>
+              <td><strong>Sage Assistant</strong></td>
+              <td>Voice & text chat with deterministic local execution, learned phrases, or multi-tier LLMs (Anthropic, OpenAI, MiniMax, local models). Direct device commands, schedule inspection, "Why?" diagnostic inquiry, held action confirmation, long-term memory management. Guarded by $8/mo budget and hub invariants.</td>
+            </tr>
+            <tr>
+              <td><strong>Time & Rhythms</strong></td>
+              <td>24-hour day timeline, hour-by-hour house preview, skip planned transitions tonight, activate temporary Overlays (Movie, Away, Party), configure Modes, Moments, and Automations. Receive smart habit suggestions.</td>
+            </tr>
+            <tr>
+              <td><strong>Media & Audio</strong></td>
+              <td>Stream Helix library or custom audio streams to mixed-brand speaker groups (Cast, Sonos, AirPlay). Fine-tune drift and latency with click-track tests. High-priority announcements with automatic music snapshot and exact second resume.</td>
+            </tr>
+            <tr>
+              <td><strong>Security & Presence</strong></td>
+              <td>WebRTC camera wall, snapshot feeds, room alert preferences, quiet hours. Biometric approval for door unlocking / garage opening. Multi-source presence tracking (OPNsense/Warden routers, TCP ping, phone shortcuts, geofencing).</td>
+            </tr>
+            <tr>
+              <td><strong>Household & Access</strong></td>
+              <td>4-tier RBAC (Owner, Adult, Child, Guest). Scoped room permissions (children cannot unlock doors). Single-use 24h invite codes (links, QR codes, <code>kova://join</code>). Biometric app lock.</td>
+            </tr>
+            <tr>
+              <td><strong>Energy & Telemetry</strong></td>
+              <td>Live GoodWe solar generation, household consumption, and grid import/export balances. Plug power metering and virtual wattage estimation. Environmental sensor history graphs.</td>
+            </tr>
+            <tr>
+              <td><strong>Administration</strong></td>
+              <td>Home Assistant backup migration, integration catalog, sandboxed HA engine with HACS, floor plan designer, automated nightly tar.gz backups, rolling updates with automatic rollback, demo sandbox mode (28 devices).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <p>Kova Documentation Reference &bull; ClickBIT Platform</p>
+    </footer>
+  </div>
+
+</body>
+</html>
